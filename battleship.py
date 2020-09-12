@@ -86,11 +86,104 @@ def print_board(board_player1,board_player2, player1, player2):
 
     input("\n\nTo move on, press the Enter key.")
 
-def get_init_ship(board,player1,player2):
-    while player1 == True:
-        coordinates_1st_player = input("Give the coordinates, Captain")
-        coordinate = coordinates_1st_player.split()
-        print(coordinate)
+
+def one_player_board(board, player1):
+
+    print("")
+    print(f"""   {player1}             """)
+    print("")
+    print("""  1 2 3 4 5               """)
+    print(f'A {board[0][0]} {board[0][1]} {board[0][2]} {board[0][3]} {board[0][4]} ')               
+
+    print(f'B {board[1][0]} {board[1][1]} {board[1][2]} {board[1][3]} {board[1][4]} ')               
+
+    print(f'C {board[2][0]} {board[2][1]} {board[2][2]} {board[2][3]} {board[2][4]}  ')              
+
+    print(f'D {board[3][0]} {board[3][1]} {board[3][2]} {board[3][3]} {board[3][4]} ')               
+
+    print(f'E {board[4][0]} {board[4][1]} {board[4][2]} {board[4][3]} {board[4][4]} ')               
+    print("")
+
+
+    input("\n\nTo move on, press the Enter key.")
+def get_init_ship(board,player):
+    while is_init(board):
+        ask_1 = input("Czy chcesz postawić jednomasztowiec: '1-jednomasztowiec'/'2-masztowiec'")
+        if ask_1 == "1":
+            coordinates_player = input("Give the coordinates, Captain: ")
+            row = coordinates_player[0]
+            row = row.upper()
+            if row.isalpha():
+                if row == "A":
+                    row = 0
+                elif row == "B":
+                    row = 1
+                elif row == "C":
+                    row = 2
+                elif row == "D":
+                    row = 3
+                elif row == "E":
+                    row = 4
+            col = int(coordinates_player[1])-1
+            board[row][col] = "X"
+            one_player_board(board, player)
+        else:
+            #Podwójny input dla dwumasztowca
+            coordinates_player = input("Give the coordinates, Captain: ")
+            row = coordinates_player[0]
+            row = row.upper()
+            if row.isalpha():
+                if row == "A":
+                    row = 0
+                elif row == "B":
+                    row = 1
+                elif row == "C":
+                    row = 2
+                elif row == "D":
+                    row = 3
+                elif row == "E":
+                    row = 4
+            col = int(coordinates_player[1])-1
+            board[row][col] = "X"
+            one_player_board(board, player)
+
+    return board
+
+
+
+    while is_init(board):
+        coordinates_player = input("Give the coordinates, Captain: ")
+        row = coordinates_player[0]
+        row = row.upper()
+        if row.isalpha():
+            if row == "A":
+                row = 0
+            elif row == "B":
+                row = 1
+            elif row == "C":
+                row = 2
+            elif row == "D":
+                row = 3
+            elif row == "E":
+                row = 4
+        col = int(coordinates_player[1])-1
+        board[row][col] = "X"
+        one_player_board(board, player)
+    return board
+
+def is_init(board):
+    counter = 0
+    for i in board:
+        for j in i:
+            if j == "X":
+                counter += 1
+    if counter == 7:
+        return False
+    else:
+        return True
+
+
+
 
 
 
@@ -110,4 +203,7 @@ if __name__ == "__main__":
     player2 = get_player_2nd_name()
     player_2 = how_started_HUMAN_HUMAN(player1,player2)
     print_board(board_player1,board_player2, player1, player2)
-    a = get_init_ship(player1,player2)
+    board_player1 = get_init_ship(board_player1,player1)
+    print("Another player")
+    board_player2 =  get_init_ship(board_player2,player2)
+    print_board(board_player1,board_player2, player1, player2)
