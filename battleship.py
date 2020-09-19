@@ -24,53 +24,59 @@
 #12 Opcjonajlnie menu dla 1vs1 lub 1vs AI
 
 import random
+import os
 
-def init_board_player1():
-    board_player1 =   [["0","0","0","0","0"],         
-                       ["0","0","0","0","0"],
-                       ["0","0","0","0","0"],
-                       ["0","0","0","0","0"],
-                       ["0","0","0","0","0"]]
-        
-    return board_player1
+clear = lambda: os.system('cls')
 
-def init_board_player2():
-    board_player2   =   [["0","0","0","0","0"],         
-                         ["0","0","0","0","0"],
-                         ["0","0","0","0","0"],
-                         ["0","0","0","0","0"],
-                         ["0","0","0","0","0"]]
-        
-    return board_player2
+ROWS = ['A', 'B', 'C', 'D', 'E']
+COLS = ["1","2","3","4","5"]
+
+def get_board():
+
+    board =             [["0", "0", "0", "0", "0"],
+                        ["0", "0", "0", "0", "0"],
+                        ["0", "0", "0", "0", "0"],
+                        ["0", "0", "0", "0", "0"],
+                        ["0", "0", "0", "0", "0"]]
 
 
-def get_player_1st_name():
-    player1 = input("Player 1 what is your name: ")
-    print(f"The player one is: {player1}\n")
-    return player1
+    return board
 
-def get_player_2nd_name():
-    player2 = input("Player 2 what is your name: ")
-    print(f"The second player is: {player2}\n")
-    return player2
+def get_shooting_board():
+
+    board =             [[".", ".", ".", ".", "."],
+                        [".", ".", ".", ".", "."],
+                        [".", ".", ".", ".", "."],
+                        [".", ".", ".", ".", "."],
+                        [".", ".", ".", ".", "."]]
+
+
+    return board
+
+def get_player_name(number):
+    player = input("Player what is your name: ")
+    print(f"The player is: {player}\n")
+    return player
+
 
 def how_started_HUMAN_HUMAN(player1, player2):
-    players = [player1,player2]
+    players = [player1, player2]
     players_2 = random.choice(players)
     print(f"The setting up of ships starts: {players_2}")
     print("")
     input("\n\nTo move on, press the Enter key.")
     return players_2
 
+
 def how_started_HUMAN_AI(player1):
     print("Computers have more power than humans, so they start")
     input("\n\nTo move on, press the Enter key.")
 
 
-def print_board(board_player1,board_player2, player1, player2):
+def print_board(board_player1, board_player2, player1, players_2):
 
     print("")
-    print(f"""   {player1}                    {player2}""")
+    print(f"""   {players_2}                    {player1}""")
     print("")
     print("""  1 2 3 4 5                  1 2 3 4 5""")
     print(f'A {board_player1[0][0]} {board_player1[0][1]} {board_player1[0][2]} {board_player1[0][3]} {board_player1[0][4]}                A {board_player2[0][0]} {board_player2[0][1]} {board_player2[0][2]} {board_player2[0][3]} {board_player2[0][4]}')
@@ -93,117 +99,160 @@ def one_player_board(board, player1):
     print(f"""   {player1}             """)
     print("")
     print("""  1 2 3 4 5               """)
-    print(f'A {board[0][0]} {board[0][1]} {board[0][2]} {board[0][3]} {board[0][4]} ')               
+    print(
+        f'A {board[0][0]} {board[0][1]} {board[0][2]} {board[0][3]} {board[0][4]} ')
 
-    print(f'B {board[1][0]} {board[1][1]} {board[1][2]} {board[1][3]} {board[1][4]} ')               
+    print(
+        f'B {board[1][0]} {board[1][1]} {board[1][2]} {board[1][3]} {board[1][4]} ')
 
-    print(f'C {board[2][0]} {board[2][1]} {board[2][2]} {board[2][3]} {board[2][4]}  ')              
+    print(
+        f'C {board[2][0]} {board[2][1]} {board[2][2]} {board[2][3]} {board[2][4]}  ')
 
-    print(f'D {board[3][0]} {board[3][1]} {board[3][2]} {board[3][3]} {board[3][4]} ')               
+    print(
+        f'D {board[3][0]} {board[3][1]} {board[3][2]} {board[3][3]} {board[3][4]} ')
 
-    print(f'E {board[4][0]} {board[4][1]} {board[4][2]} {board[4][3]} {board[4][4]} ')               
+    print(
+        f'E {board[4][0]} {board[4][1]} {board[4][2]} {board[4][3]} {board[4][4]} ')
     print("")
 
-
     input("\n\nTo move on, press the Enter key.")
-def get_init_ship(board,player):
+
+
+def get_init_ship(board, player):
     while is_init(board):
-        ask_1 = input("Czy chcesz postawić jednomasztowiec: '1-jednomasztowiec'/'2-masztowiec'")
+        ask_1 = input(
+            "Czy chcesz postawić:'1-jednomasztowiec' czy '2-masztowiec'")
         if ask_1 == "1":
-            coordinates_player = input("Give the coordinates, Captain: ")
-            row = coordinates_player[0]
-            row = row.upper()
-            if row.isalpha():
-                if row == "A":
-                    row = 0
-                elif row == "B":
-                    row = 1
-                elif row == "C":
-                    row = 2
-                elif row == "D":
-                    row = 3
-                elif row == "E":
-                    row = 4
-            col = int(coordinates_player[1])-1
+            row, col = get_coordinates()
+
             board[row][col] = "X"
             one_player_board(board, player)
+            zaznaczanie_sasiadow(board, [row, col])
+            
         else:
-            #Podwójny input dla dwumasztowca
-            coordinates_player = input("Give the coordinates, Captain: ")
-            row = coordinates_player[0]
-            row = row.upper()
-            if row.isalpha():
-                if row == "A":
-                    row = 0
-                elif row == "B":
-                    row = 1
-                elif row == "C":
-                    row = 2
-                elif row == "D":
-                    row = 3
-                elif row == "E":
-                    row = 4
-            col = int(coordinates_player[1])-1
+            row, col = get_coordinates()
             board[row][col] = "X"
             one_player_board(board, player)
+            zaznaczanie_sasiadow(board, [row, col])
+            
+            row2, col2 = get_coordinates()
+            while not validate_coordinate(row, col, row2, col2):
+                row2, col2 = get_coordinates()
+            board[row2][col2] = "X"
+            one_player_board(board, player)
+            zaznaczanie_sasiadow(board, [row, col])
+            zaznaczanie_sasiadow(board, [row2, col2])
 
     return board
 
+def zaznaczanie_sasiadow(board, a):
 
+    if 0 <= a[0]-1 and board[a[0]-1][a[1]] == "0" :
+        board[a[0]-1][a[1]] = "~"
+        
+    if 4 >= a[0]+1  and board[a[0]+1][a[1]] == "0":
+        board[a[0]+1][a[1]] = "~"
+        
+    if 0 <= a[1]-1 and board[a[0]][a[1]-1] == "0":
+        board[a[0]][a[1]-1] = "~"
+        
+    if 4 >= a[1]+1  and board[a[0]][a[1]+1] == "0":
+        board[a[0]][a[1]+1] = "~" 
+    print(board)
 
-    while is_init(board):
+def validate_coordinate(row, col, row2, col2):
+    return row - 1 <= row2 <= row + 1 and col - 1 <= col2 <= col + 1 and not (row2 -1  == row  and col2 - 1 == col) and not (row2 -1 == row and col2 +1 == col) and not (row2 +1 == row and col2 - 1 == col) and not (row2 +1 == row and col2 +1 == col)
+
+def get_coordinates():
+    while True:
         coordinates_player = input("Give the coordinates, Captain: ")
-        row = coordinates_player[0]
-        row = row.upper()
-        if row.isalpha():
-            if row == "A":
-                row = 0
-            elif row == "B":
-                row = 1
-            elif row == "C":
-                row = 2
-            elif row == "D":
-                row = 3
-            elif row == "E":
-                row = 4
-        col = int(coordinates_player[1])-1
-        board[row][col] = "X"
-        one_player_board(board, player)
-    return board
-
+        if len(coordinates_player) >= 2:
+            row = coordinates_player[0]
+            col = coordinates_player[1]
+            row = row.upper()
+            if row in ROWS and col in COLS:
+                row = ROWS.index(row)
+                col = int(coordinates_player[1])-1
+                return row, col
+            else:
+                print("Wrong coordinates")
+        else:
+            print("Good coordinates : 'A1'")
+    
 def is_init(board):
     counter = 0
     for i in board:
         for j in i:
             if j == "X":
                 counter += 1
-    if counter == 7:
-        return False
-    else:
-        return True
+    return not counter == 2
 
 
+def play(board_player1, board_player2):
+    shot_board_player1 = get_shooting_board()
+    shot_board_player2 = get_shooting_board()
+    current_board_player = board_player2
+    current_shot_board_player = shot_board_player1
+    current_player = 1
+    
+    while not has_won(board_player1, shot_board_player1 ) and not has_won(board_player2, shot_board_player2):
+        
+        clear()
+        one_player_board(current_shot_board_player, current_player)
+        while True:
+            row, col = get_coordinates()
+            if current_shot_board_player[row][col] == ".":
+                break
+            else:
+                print("Wrong coordinates to shot")
+        if current_board_player[row][col] == "X":
+            print("You Hit")
+            current_shot_board_player[row][col] = "H"
+        else:
+            print("You miss")
+            current_shot_board_player[row][col] = "M"
+        input("Press enter to continue")
+        if current_player == 1:
+            current_player = 2
+            current_shot_board_player = shot_board_player2
+            current_board_player = board_player1
+        else:
+            current_board_player = board_player2
+            current_shot_board_player = shot_board_player1
+            current_player = 1
+    print("You win")
+            
+        
+        
 
 
-
-
-
-
-
-
-
-
+def has_won(board_player, shot_board_player):
+    counter = 0
+    for i in board_player:
+        for j in i:
+            if j == "X":
+                counter += 1
+    counter_h = 0
+    for i in shot_board_player:
+        for j in i:
+            if j == "H":
+                counter_h += 1
+    
+    return counter == counter_h
 
 
 
 if __name__ == "__main__":
-    board_player1 = init_board_player1()
-    board_player2 = init_board_player2()
-    player1 = get_player_1st_name()
-    player2 = get_player_2nd_name()
-    player_2 = how_started_HUMAN_HUMAN(player1,player2)
-    print_board(board_player1,board_player2, player1, player2)
-    board_player1 = get_init_ship(board_player1,player1)
+    board_player1 = get_board()
+    board_player2 = get_board()
+    player1 = get_player_name(1)
+    player2 = get_player_name(2)
+    player_2 = how_started_HUMAN_HUMAN(player1, player2)
+    print_board(board_player1, board_player2, player1, player2)
+    board_player1 = get_init_ship(board_player1, player1)
     print("Another player")
-    board_player2 =  get_init_ship(board_player2,player2)
-    print_board(board_player1,board_player2, player1, player2)
+    board_player2 = get_init_ship(board_player2, player2)
+    print_board(board_player1, board_player2, player1, player2)
+    print("Shooting time!!!")
+    play(board_player1,board_player2)
+    
